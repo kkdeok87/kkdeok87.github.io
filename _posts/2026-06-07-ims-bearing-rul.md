@@ -22,9 +22,6 @@ author: "강경덕, 장희중, 김기훈, 박창진"
 
 NASA IMS Bearing Dataset은 베어링 가속 수명 시험 데이터를 제공한다.
 
-https://data.nasa.gov/dataset/ims-bearings
-https://www.kaggle.com/datasets/vinayak123tyagi/bearing-dataset
-
 실험 조건은 다음과 같다.
 
 * Sampling Rate : 20 kHz
@@ -180,3 +177,8 @@ CAP 24시간 조건에서 전체 테스트 데이터에 대해 약 2시간 수�
 특히 FFT, PSD, Band Energy와 같은 주파수 영역 Feature가 베어링 열화 패턴을 표현하는 데 효과적임을 확인할 수 있었으며, LSTM 기반 모델을 통해 실제 수명 예측 문제를 경험할 수 있었다.
 
 향후에는 TCN(Temporal CNN), Attention, Transformer 기반 모델과의 성능 비교도 수행해 볼 예정이다.
+
+## Related Works
+https://data.nasa.gov/dataset/ims-bearings
+
+https://www.kaggle.com/datasets/vinayak123tyagi/bearing-dataset
