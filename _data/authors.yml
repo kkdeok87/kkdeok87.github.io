@@ -1,0 +1,13 @@
+<author1_id>:
+  name: 강경덕
+
+<author2_id>:
+  name: 장희중
+
+<author3_id>:
+  name: 김기훈
+
+<author4_id>:
+  name: 박창진
+
+authors: [<author1_id>, <author2_id>]
