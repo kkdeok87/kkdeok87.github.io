@@ -60,6 +60,13 @@ jobs:
         uses: actions/upload-pages-artifact@v4
         with:
           path: "_site${{ steps.pages.outputs.base_path }}"
+          
+      - name: Check generated site
+        run: |
+          echo "===== _site files ====="
+          find _site -maxdepth 4 -type f | sort | head -200
+          echo "===== posts ====="
+          find _site/posts -maxdepth 3 -type f | sort || true
 
   deploy:
     environment:
