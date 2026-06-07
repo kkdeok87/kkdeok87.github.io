@@ -181,6 +181,8 @@ CAP 24시간 조건에서 전체 테스트 데이터에 대해 약 2시간 수�
 
 향후에는 TCN(Temporal CNN), Attention, Transformer 기반 모델과의 성능 비교도 수행해 볼 예정이다.
 
+---
+
 ## Related Works
 https://data.nasa.gov/dataset/ims-bearings
 
