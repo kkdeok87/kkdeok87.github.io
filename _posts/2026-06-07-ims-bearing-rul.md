@@ -7,8 +7,9 @@ author: "강경덕, 장희중, 김기훈, 박창진"
 ---
 
 # NASA IMS Bearing Dataset 기반 Bearing RUL Prediction
-
+---
 ## 저자: AX:딥러닝 G24 - 강경덕, 장희중, 김기훈, 박창진
+---
 
 ## 프로젝트 개요
 
