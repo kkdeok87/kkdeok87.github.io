@@ -194,10 +194,12 @@ CAP 24시간 조건에서 전체 테스트 데이터에 대해 약 2시간 수�
   - https://www.kaggle.com/datasets/vinayak123tyagi/bearing-dataset
 
 ## 역할
-강경덕: 데이터 Feature 추출, 블로그 정리, Youtube 녹화
-장희중: 과제 탐색
-김기훈: 블로그 초안 작성
-박창진: Youtube 스크립트
+- 강경덕: 데이터 Feature 추출, 블로그 정리, Youtube 녹화
+- 장희중: 과제 탐색
+- 김기훈: 블로그 초안 작성
+- 박창진: Youtube 스크립트
 
+## Youtube Link:
+- https://youtu.be/NDRLWknIzF8
 
 
