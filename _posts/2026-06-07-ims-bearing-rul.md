@@ -7,9 +7,11 @@ author: "강경덕, 장희중, 김기훈, 박창진"
 ---
 
 # NASA IMS Bearing Dataset 기반 Bearing RUL Prediction
----
-## 저자: AX:딥러닝 G24 - 강경덕, 장희중, 김기훈, 박창진
----
+
+> **AX: 딥러닝 G24**
+>
+> 공동 연구자:
+> 강경덕, 장희중, 김기훈, 박창진
 
 ## 프로젝트 개요
 
@@ -184,6 +186,9 @@ CAP 24시간 조건에서 전체 테스트 데이터에 대해 약 2시간 수�
 ---
 
 ## Related Works
-https://data.nasa.gov/dataset/ims-bearings
 
-https://www.kaggle.com/datasets/vinayak123tyagi/bearing-dataset
+- NASA IMS Bearing Dataset
+  - https://data.nasa.gov/dataset/ims-bearings
+
+- Kaggle Bearing Dataset
+  - https://www.kaggle.com/datasets/vinayak123tyagi/bearing-dataset
