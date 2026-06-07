@@ -1,12 +1,12 @@
-title: AX:DeepLearning_G24
+title: "딥러닝_G24"
 
-social:
-  name: Kyoung Kang
-
-tagline: Embedded Linux | HVAC | AI
+tagline: "Embedded Linux | HVAC | AI"
 
 description: >
   Embedded Linux BSP,
   Device Driver,
   HVAC Controller,
   AI Project
+
+social:
+  name: "딥러닝_G24"
