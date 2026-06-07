@@ -8,6 +8,8 @@ author: "강경덕, 장희중, 김기훈, 박창진"
 
 # NASA IMS Bearing Dataset 기반 Bearing RUL Prediction
 
+## 저자: AX:딥러닝 G24 - 강경덕, 장희중, 김기훈, 박창진
+
 ## 프로젝트 개요
 
 예지보전(Predictive Maintenance)에서는 단순히 설비의 고장 여부를 판단하는 것보다 앞으로 얼마나 더 사용할 수 있는지 예측하는 것이 중요하다.
