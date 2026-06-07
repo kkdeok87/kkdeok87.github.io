@@ -44,7 +44,7 @@ NASA IMS Bearing Dataset은 베어링 가속 수명 시험 데이터를 제공�
 
 먼저 FFT를 이용하여 진동 데이터를 주파수 영역으로 변환하였다.
 
-![Amplitude Spectrum](/assets/img/Amplitude Spectrum.png)
+![Amplitude Spectrum](/assets/img/Amplitude_Spectrum.png)
 
 진폭 스펙트럼을 통해 특정 주파수 성분이 얼마나 강하게 나타나는지 확인할 수 있다.
 
