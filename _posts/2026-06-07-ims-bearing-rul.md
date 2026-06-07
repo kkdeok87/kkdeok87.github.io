@@ -3,6 +3,7 @@ title: "NASA IMS Bearing Dataset 기반 Bearing RUL Prediction"
 date: 2026-06-07
 categories: [AI, Predictive-Maintenance]
 tags: [RUL, Bearing, LSTM, Deep-Learning]
+author: "강경덕, 장희중, 김기훈, 박창진"
 ---
 
 # NASA IMS Bearing Dataset 기반 Bearing RUL Prediction
