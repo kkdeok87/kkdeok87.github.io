@@ -21,6 +21,7 @@ author: "강경덕, 장희중, 김기훈, 박창진"
 ## 데이터셋 소개
 
 NASA IMS Bearing Dataset은 베어링 가속 수명 시험 데이터를 제공한다.
+
 https://data.nasa.gov/dataset/ims-bearings
 https://www.kaggle.com/datasets/vinayak123tyagi/bearing-dataset
 
