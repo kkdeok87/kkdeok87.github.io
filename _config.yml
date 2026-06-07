@@ -22,3 +22,14 @@ social:
   name: "딥러닝_G24"
 
 future: true
+
+jekyll-archives:
+  enabled:
+    - categories
+    - tags
+  layouts:
+    category: category
+    tag: tag
+  permalinks:
+    category: /categories/:name/
+    tag: /tags/:name/
