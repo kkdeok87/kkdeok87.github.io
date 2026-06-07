@@ -54,7 +54,7 @@ NASA IMS Bearing Dataset은 베어링 가속 수명 시험 데이터를 제공�
 
 FFT 결과는 노이즈의 영향을 받을 수 있기 때문에 Welch PSD를 이용하여 보다 안정적인 주파수 특성을 계산하였다.
 
-![Power Spectral Density](/assets/img/Power Spectral Density.png)
+![Power Spectral Density](/assets/img/Power_Spectral_Density.png)
 
 PSD는 특정 주파수 대역에 얼마나 많은 에너지가 분포하는지를 나타낸다.
 
