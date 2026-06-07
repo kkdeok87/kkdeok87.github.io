@@ -1,5 +1,9 @@
-title: "딥러닝_G24"
+theme: jekyll-theme-chirpy
 
+lang: ko-KR
+timezone: Asia/Seoul
+
+title: "딥러닝_G24"
 tagline: "Embedded Linux | HVAC | AI"
 
 description: >
@@ -7,6 +11,12 @@ description: >
   Device Driver,
   HVAC Controller,
   AI Project
+
+url: "https://kkdeok87.github.io"
+baseurl: ""
+
+github:
+  username: kkdeok87
 
 social:
   name: "딥러닝_G24"
