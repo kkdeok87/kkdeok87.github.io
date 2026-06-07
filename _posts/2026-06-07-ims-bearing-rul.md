@@ -1,163 +1,92 @@
-
 ---
 title: "NASA IMS Bearing Dataset 기반 Bearing RUL Prediction"
 date: 2026-06-07
-categories: [AI, Predictive Maintenance]
-tags: [RUL, Bearing, LSTM, Deep Learning, Predictive Maintenance]
+categories: [AI, Predictive-Maintenance]
+tags: [RUL, Bearing, LSTM, Deep-Learning]
 ---
 
 # NASA IMS Bearing Dataset 기반 Bearing RUL Prediction
 
-## 1. 프로젝트 개요
+## 프로젝트 개요
 
-산업 설비의 예지보전(Predictive Maintenance) 분야에서는 단순히 고장 여부를 판별하는 것보다 앞으로 얼마나 사용할 수 있는지 예측하는 Remaining Useful Life(RUL) 추정이 중요하다.
+예지보전(Predictive Maintenance)에서는 단순히 설비의 고장 여부를 판단하는 것보다 앞으로 얼마나 더 사용할 수 있는지 예측하는 것이 중요하다.
 
 이번 프로젝트에서는 NASA IMS Bearing Dataset을 활용하여 베어링 진동 데이터를 분석하고, Remaining Useful Life(RUL)를 예측하는 딥러닝 모델을 구현하였다.
 
-최종 목표는 특정 시점의 진동 데이터로부터 남은 수명을 시간 단위로 추정하는 것이다.
+최종 목표는 특정 시점의 진동 데이터로부터 베어링의 남은 수명을 시간 단위로 추정하는 것이다.
 
 ---
 
-## 2. 데이터셋 소개
+## 데이터셋 소개
 
-NASA IMS Bearing Dataset은 University of Cincinnati IMS Center에서 수행한 가속 수명 시험 데이터를 제공한다.
+NASA IMS Bearing Dataset은 베어링 가속 수명 시험 데이터를 제공한다.
 
 실험 조건은 다음과 같다.
 
-* Sampling Rate: 20 kHz
-* Measurement Duration: 1 second
-* Measurement Interval: 10 minutes
-* Rotational Speed: 2000 RPM
-* Bearing Test Rig 기반 가속 수명 시험
+* Sampling Rate : 20 kHz
+* Measurement Duration : 1 second
+* Measurement Interval : 10 minutes
+* Rotational Speed : 2000 RPM
 
-실험은 총 3개의 테스트 셋으로 구성되어 있다.
-
-| Dataset | 용도    |
-| ------- | ----- |
-| Set1    | Train |
-| Set2    | Train |
-| Set3    | Test  |
-
-Set1과 Set2에는 고장이 발생한 베어링 채널이 명확하게 정의되어 있으며, Set3은 최종 성능 평가에 사용하였다.
+각 CSV 파일은 1초 동안 측정된 진동 신호를 저장하고 있으며, 여러 파일이 시간 순서대로 저장되어 베어링 열화 과정을 관찰할 수 있다.
 
 ---
 
-### 데이터 구조
+## Feature 탐색
 
-[이미지 삽입 예정]
+원본 데이터는 시간 영역(Time Domain)의 진동 데이터이다.
 
-```text
-CSV File
- ├─ Channel 0
- ├─ Channel 1
- ├─ Channel 2
- └─ Channel 3
-
-1 File = 1초 진동 데이터
-1 Dataset = 수백~수천 개의 파일
-```
+베어링 결함은 특정 주파수 대역의 에너지 증가로 나타나는 경우가 많기 때문에 주파수 영역 분석을 수행하였다.
 
 ---
 
-## 3. 문제 정의
+### 1. Amplitude Spectrum
 
-초기에는 베어링 고장 여부를 분류하는 Classification 문제를 고려하였다.
+먼저 FFT를 이용하여 진동 데이터를 주파수 영역으로 변환하였다.
 
-그러나 실제 산업 환경에서는 단순히 고장 여부보다
+![Amplitude Spectrum](/assets/img/Amplitude Spectrum.png)
 
-> "앞으로 얼마나 사용할 수 있는가?"
-
-가 더욱 중요하다.
-
-따라서 본 프로젝트는 Binary Classification 대신 RUL Regression 문제로 정의하였다.
-
-입력:
-
-* 진동 신호 특징
-
-출력:
-
-* Remaining Useful Life (시간)
+진폭 스펙트럼을 통해 특정 주파수 성분이 얼마나 강하게 나타나는지 확인할 수 있다.
 
 ---
 
-## 4. Feature 탐색
+### 2. Power Spectral Density (PSD)
 
-원본 데이터는 시간 영역(Time Domain)의 가속도 값이다.
+FFT 결과는 노이즈의 영향을 받을 수 있기 때문에 Welch PSD를 이용하여 보다 안정적인 주파수 특성을 계산하였다.
 
-베어링 결함은 일반적으로 특정 주파수 대역의 에너지 증가로 나타나므로 주파수 영역 분석을 수행하였다.
+![Power Spectral Density](/assets/img/Power Spectral Density.png)
 
----
-
-### 4.1 FFT 기반 스펙트럼 분석
-
-먼저 각 파일에 대해 FFT를 수행하여 진폭 스펙트럼을 확인하였다.
-
-[이미지 삽입 예정]
-
-고장 채널에서는 시간이 지남에 따라 고주파 성분이 증가하는 경향을 확인할 수 있었다.
+PSD는 특정 주파수 대역에 얼마나 많은 에너지가 분포하는지를 나타낸다.
 
 ---
 
-### 4.2 Welch PSD
+### 3. Band Energy
 
-일반 FFT는 노이즈에 민감하므로 Welch PSD(Power Spectral Density)를 적용하였다.
-
-Welch 방법은 신호를 여러 구간으로 나누어 FFT를 수행한 뒤 평균을 계산하여 보다 안정적인 주파수 특성을 제공한다.
-
----
-
-### 4.3 최종 선택한 Feature
-
-실험 결과 다음 3개의 Feature를 사용하였다.
-
-#### Feature 1. AMP_like
-
-PSD의 제곱근 값을 사용하였다.
-
-```text
-AMP_like = √PSD
-```
-
-직관적으로 진폭 크기를 표현한다.
-
----
-
-#### Feature 2. PSD
-
-주파수별 에너지 밀도를 표현한다.
-
-베어링 열화가 진행될수록 특정 주파수 대역의 PSD가 증가하는 경향을 보인다.
-
----
-
-#### Feature 3. Band Energy
-
-주파수 대역별 에너지를 계산하였다.
+PSD 전체를 사용하는 대신 주파수 구간별 에너지를 계산하였다.
 
 사용한 대역은 다음과 같다.
 
-| Band | Frequency     |
-| ---- | ------------- |
-| B1   | 0~200 Hz      |
-| B2   | 200~800 Hz    |
-| B3   | 800~2000 Hz   |
-| B4   | 2000~5000 Hz  |
-| B5   | 5000~10000 Hz |
+| Band | Frequency Range |
+| ---- | --------------- |
+| B1   | 0 ~ 200 Hz      |
+| B2   | 200 ~ 800 Hz    |
+| B3   | 800 ~ 2000 Hz   |
+| B4   | 2000 ~ 5000 Hz  |
+| B5   | 5000 ~ 10000 Hz |
+
+아래 그래프는 채널 0의 주파수 대역별 에너지 변화 예시이다.
+
+![Band Energy](/assets/img/Band_Energy_Channel_0.png)
 
 ---
 
-### Feature 변화 추세
+## RUL Label 생성
 
-특히 5~10 kHz 대역에서 열화 징후가 가장 뚜렷하게 나타났다.
+초기에는 고장 여부를 분류하는 Classification 문제를 고려하였다.
 
-[이미지 삽입 예정]
+하지만 실제 산업 환경에서는 "고장이 났는가?" 보다 "앞으로 얼마나 사용할 수 있는가?" 가 더욱 중요하다.
 
----
-
-## 5. RUL Label 생성
-
-실험 종료 시점을 Failure Point로 정의하였다.
+따라서 이번 프로젝트에서는 RUL Regression 문제로 정의하였다.
 
 각 시점의 RUL은 다음과 같이 계산하였다.
 
@@ -165,88 +94,52 @@ AMP_like = √PSD
 RUL = Failure Time - Current Time
 ```
 
----
-
-### Capped RUL
-
-초기 데이터 대부분은 정상 상태이므로 지나치게 큰 RUL 값을 가진다.
-
-이를 방지하기 위해 RUL을 24시간으로 제한하였다.
+또한 정상 구간이 지나치게 길어지는 문제를 줄이기 위해 RUL을 최대 24시간으로 제한하였다.
 
 ```text
 RUL_capped = min(RUL, 24h)
 ```
 
-[이미지 삽입 예정]
-
-이 방법을 통해 모델이 실제 열화 구간에 집중하도록 유도하였다.
-
 ---
 
-## 6. 시퀀스 윈도우 구성
+## 모델 구성
 
-LSTM은 시계열 패턴을 학습하기 때문에 단일 시점이 아니라 연속된 데이터가 필요하다.
+모델 입력은 다음과 같다.
 
-본 프로젝트에서는
+* Amplitude Spectrum
+* Power Spectral Density
+* Band Energy
 
-* Window Length = 12
-* Stride = 1
+각 Feature를 정규화한 뒤 시계열 형태로 구성하였다.
 
-을 사용하였다.
+* Window Length : 12
+* Stride : 1
 
-즉,
+즉 약 2시간 동안의 진동 특성 변화를 하나의 입력 시퀀스로 사용하였다.
 
-```text
-12개 측정 파일
-≈ 약 2시간
-```
-
-의 변화 패턴을 입력으로 사용하였다.
-
----
-
-## 7. LSTM 모델 설계
-
-모델 구조는 다음과 같다.
+모델은 LSTM 기반 회귀 모델을 사용하였다.
 
 ```text
 Input
-  ↓
+ ↓
 LSTM(128)
-  ↓
+ ↓
 Dense(64)
-  ↓
+ ↓
 Dense(1)
 ```
 
-출력은 특정 시점의 Remaining Useful Life이다.
-
-[모델 구조 이미지 삽입 예정]
+출력값은 해당 시점의 Remaining Useful Life(RUL)이다.
 
 ---
 
-## 8. 학습 및 검증
+## 결과
 
-학습 데이터:
+Set1과 Set2 데이터를 이용하여 학습을 수행하고, Set3 데이터를 이용하여 최종 성능을 평가하였다.
 
-* Set1
-* Set2
+![RUL Result](/assets/img/RUL_결과.PNG)
 
-검증 데이터:
-
-* Train Set 내부 마지막 20%
-
-테스트 데이터:
-
-* Set3
-
----
-
-## 9. 테스트 결과
-
-최종 모델은 Set3 데이터 중 10% 랜덤 샘플링된 시퀀스 윈도우를 이용하여 평가하였다.
-
-### 전체 테스트 결과
+최종 테스트 결과는 다음과 같다.
 
 | Metric | Result   |
 | ------ | -------- |
@@ -254,11 +147,7 @@ Dense(1)
 | RMSE   | 2.0367 h |
 | MAPE   | 27.77 %  |
 
----
-
-### Near Failure 구간
-
-실제 고장에 가까운 하위 100개 샘플에 대해 평가하였다.
+고장 직전 데이터(하위 100개 샘플)에 대해서는 다음 결과를 얻었다.
 
 | Metric | Result   |
 | ------ | -------- |
@@ -268,34 +157,22 @@ Dense(1)
 
 ---
 
-## 10. 결과 해석
+## 결과 해석
 
-전체 테스트 구간에서는 약 24시간 범위의 RUL 예측 문제에 대해 RMSE 약 2시간 수준의 성능을 달성하였다.
+CAP 24시간 조건에서 전체 테스트 데이터에 대해 약 2시간 수준의 RMSE를 달성하였다.
 
-이는 모델이 평균적으로 약 ±2시간 수준의 오차 범위 내에서 남은 수명을 추정할 수 있음을 의미한다.
+이는 모델이 남은 수명 24시간 범위 내에서 평균적으로 약 ±2시간 수준의 오차로 베어링 수명을 예측할 수 있음을 의미한다.
 
 반면 고장 직전 구간에서는 오차가 증가하였다.
 
-이는
-
-* 학습 데이터 불균형
-* 급격한 열화 패턴
-* 매우 작은 RUL 값
-
-등의 영향으로 판단된다.
+이는 실제 고장에 가까워질수록 열화 패턴이 급격하게 변화하고, 상대적으로 학습 데이터 수가 적기 때문으로 판단된다.
 
 ---
 
-## 11. 결론
+## 마무리
 
-본 프로젝트에서는 NASA IMS Bearing Dataset을 활용하여 Bearing Remaining Useful Life Prediction 모델을 구현하였다.
+이번 프로젝트를 통해 진동 신호 기반의 Remaining Useful Life(RUL) 예측 과정을 처음부터 구현해보았다.
 
-단순 고장 분류 대신 RUL Regression 문제로 접근하였으며,
+특히 FFT, PSD, Band Energy와 같은 주파수 영역 Feature가 베어링 열화 패턴을 표현하는 데 효과적임을 확인할 수 있었으며, LSTM 기반 모델을 통해 실제 수명 예측 문제를 경험할 수 있었다.
 
-* Welch PSD
-* AMP_like
-* Band Energy
-
-기반 Feature를 활용하여 베어링 열화 특성을 추출하였다.
-
-최종적으로 Set3 테스트 데이터에서 RMSE 약 2시간 수준의 성능을 달성하였으며, 향후 TCN, Attention, Transformer 기반 모델과 비교 실험을 수행할 예정이다.
+향후에는 TCN(Temporal CNN), Attention, Transformer 기반 모델과의 성능 비교도 수행해 볼 예정이다.
